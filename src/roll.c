@@ -227,8 +227,10 @@ static int open_pid_file(int *pid_file_fd, char *pid_file) {
         fprintf(stderr, "Cannot write pidfile to %s\n", PID_FILE);
         return 0;
     }
+#ifdef HAVE_FCNTL_H
     /* Prevent file descriptor from being inherited by child processes. */
     fcntl(pid_file_fd, F_SETFD, FD_CLOEXEC);
+#endif
     if(lockf(*pid_file_fd, F_TLOCK, 0) < 0) {
         fprintf(stderr, "Only one copy of this program can be run at once.\n");
         return 0;
@@ -425,8 +427,10 @@ int main(int argc, char *argv[]) {
         log_error("Unable to open %s: %s", host_file_tmpname, strerror(errno));
         goto error;
     }
+#ifdef HAVE_FCNTL_H
     /* Prevent file descriptor from being inherited by child processes. */
     fcntl(fileno(host_file), F_SETFD, FD_CLOEXEC);
+#endif
 
     /* parse the host file, figure out which hostclass file to fetch */
     log_info("Parsing host config file");
@@ -468,8 +472,10 @@ int main(int argc, char *argv[]) {
         log_error("Unable to open %s: %s", hostclass_file_tmpname, strerror(errno));
         goto error;
     }
+#ifdef HAVE_FCNTL_H
     /* Prevent file descriptor from being inherited by child processes. */
     fcntl(fileno(hostclass_file), F_SETFD, FD_CLOEXEC);
+#endif
 
     if(!parse_hostclass_config(&hostclass_config, hostclass_file)) {
         goto error;

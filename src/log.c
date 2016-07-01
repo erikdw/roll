@@ -43,6 +43,9 @@
 #ifdef HAVE_STRING_H
     #include <string.h>
 #endif
+#ifdef HAVE_FCNTL_H
+    #include <fcntl.h>
+#endif
 #ifdef HAVE_LIMITS_H
     #include <limits.h>
 #endif
@@ -148,8 +151,10 @@ int log_init(char *filename, char *linkname) {
         fprintf(stderr, "Cannot open %s for writing.\n", filename);
         return 0;
     }
+#ifdef HAVE_FCNTL_H
     /* Prevent file descriptor from being inherited by child processes. */
     fcntl(fileno(logfile), F_SETFD, FD_CLOEXEC);
+#endif
 
     strcpy(log_filename, filename);
 

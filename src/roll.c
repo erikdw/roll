@@ -229,7 +229,7 @@ static int open_pid_file(int *pid_file_fd, char *pid_file) {
     }
 #ifdef HAVE_FCNTL_H
     /* Prevent file descriptor from being inherited by child processes. */
-    fcntl(pid_file_fd, F_SETFD, FD_CLOEXEC);
+    fcntl(*pid_file_fd, F_SETFD, FD_CLOEXEC);
 #endif
     if(lockf(*pid_file_fd, F_TLOCK, 0) < 0) {
         fprintf(stderr, "Only one copy of this program can be run at once.\n");

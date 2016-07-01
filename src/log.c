@@ -148,6 +148,9 @@ int log_init(char *filename, char *linkname) {
         fprintf(stderr, "Cannot open %s for writing.\n", filename);
         return 0;
     }
+    /* Prevent file descriptor from being inherited by child processes. */
+    fcntl(fileno(logfile), F_SETFD, FD_CLOEXEC);
+
     strcpy(log_filename, filename);
 
     /* Swap the symlink */
